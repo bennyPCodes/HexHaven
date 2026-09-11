@@ -53,7 +53,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 #app{display:flex;flex-direction:column;height:100dvh;max-width:760px;margin:0 auto;position:relative}
 
 /* ---------- top bar ---------- */
-#top{display:flex;gap:6px;padding:8px 10px calc(8px);overflow-x:auto;scrollbar-width:none;border-bottom:1px solid #1d3d4b}
+#top{display:flex;gap:6px;padding:calc(8px + env(safe-area-inset-top)) 10px 8px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid #1d3d4b;flex:0 0 auto}
 #top::-webkit-scrollbar{display:none}
 .pchip{flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;
   background:#0f2531;border:1px solid #1d3d4b;font-size:13px;white-space:nowrap;opacity:.62}
@@ -64,8 +64,8 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .pchip .meta{color:var(--muted);font-size:11px;letter-spacing:.03em}
 
 /* ---------- board ---------- */
-#boardwrap{flex:1;min-height:0;position:relative}
-#board{width:100%;height:100%;display:block;touch-action:manipulation}
+#boardwrap{flex:1;min-height:0;position:relative;overflow:hidden}
+#board{width:100%;height:100%;display:block;touch-action:none}
 .hexfill{stroke:#0a1a24;stroke-width:2}
 .tok{fill:#efe6cf;stroke:#00000033}
 .toktxt{font-family:ui-serif,Georgia,serif;font-size:17px;font-weight:700;text-anchor:middle;fill:#2b2318}
@@ -75,15 +75,16 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .harbtxt{font-size:9.5px;text-anchor:middle;fill:var(--brass);font-weight:700;letter-spacing:.02em}
 .harbline{stroke:var(--brass);stroke-width:1.4;opacity:.55}
 .roadpc{stroke-linecap:round}
-.spot{fill:#f6f1e2;opacity:.9;stroke:#0a1a24;stroke-width:1.5;animation:pulse 1.4s ease-in-out infinite}
-.spotline{stroke:#f6f1e2;stroke-width:9;stroke-linecap:round;opacity:.85;animation:pulse 1.4s ease-in-out infinite}
+.spot{fill:#f6f1e2;opacity:.95;stroke:#0a1a24;stroke-width:2;animation:pulse 1.4s ease-in-out infinite;pointer-events:none}
+.hit{fill:transparent;stroke:transparent}
+.spotline{stroke:#f6f1e2;stroke-width:13;stroke-linecap:round;opacity:.9;animation:pulse 1.4s ease-in-out infinite;pointer-events:none}
 .hexpick{fill:#f6f1e2;opacity:.16;animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:.35}50%{opacity:.95}}
 @media (prefers-reduced-motion:reduce){.spot,.spotline,.hexpick{animation:none}}
 .decor{opacity:.24}
 
 /* ---------- status ---------- */
-#status{padding:7px 14px;text-align:center;font-size:13.5px;color:var(--brass);
+#status{padding:6px 14px;text-align:center;font-size:13.5px;color:var(--brass);flex:0 0 auto;
   border-top:1px solid #1d3d4b;background:#0d232f;min-height:32px;display:flex;align-items:center;justify-content:center;gap:10px}
 #status .sub{color:var(--muted)}
 #cancel{border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:12px;color:var(--muted)}
@@ -130,7 +131,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .wide[disabled]{background:#1d3d4b;color:var(--muted);font-weight:400}
 .two{display:flex;gap:8px}
 .two>*{flex:1}
-#log{padding:0 14px 6px;font-size:12px;color:var(--muted);text-align:center;height:17px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+#log{padding:0 14px 4px;font-size:12px;color:var(--muted);text-align:center;height:16px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex:0 0 auto}
 
 /* ---------- start / end screens ---------- */
 #start,#over{position:absolute;inset:0;z-index:30;background:linear-gradient(180deg,#0c2130,#071219);
@@ -147,6 +148,13 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .count button.on{border-color:var(--brass);background:#173b4b}
 .rulebox{font-size:12.5px;color:var(--muted);line-height:1.6}
 .rulebox b{color:var(--paper);font-weight:600}
+/* ---------- zoom controls ---------- */
+#zoomctl{position:absolute;right:8px;bottom:8px;display:flex;flex-direction:column;gap:6px;z-index:5}
+#zoomctl button{width:38px;height:38px;border-radius:11px;background:#12303ecc;border:1px solid #2a5163;
+  color:var(--paper);font-size:19px;line-height:1;backdrop-filter:blur(3px)}
+#zoomctl button:active{background:#1c4356}
+#zoomctl button:disabled{opacity:.35}
+
 /* ---------- your status strip ---------- */
 #mystatus{display:flex;align-items:center;gap:8px;padding:8px 14px 0;flex-wrap:wrap}
 #mystatus .pts{display:flex;align-items:baseline;gap:5px;font-family:ui-serif,Georgia,serif;
@@ -157,10 +165,16 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 #mystatus .bonus.road{background:#1d4d3a22;border-color:#3a8f63;color:#7fd9a8}
 #mystatus .bonus.army{background:#4d1d1d22;border-color:#a8493a;color:#e0917f}
 #mystatus .hint{font-size:11px;color:var(--muted)}
+#statsBox{font-size:12.5px;color:var(--muted);line-height:1.6}
+#statsBox h4{margin:0 0 6px;font-size:13px;color:var(--paper);font-family:ui-sans-serif,system-ui,sans-serif;letter-spacing:.03em}
+#statsBox .rec{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #16323f}
+#statsBox .rec b{color:var(--paper);font-weight:600}
+#statsBox .tools{display:flex;gap:8px;margin-top:9px}
+#statsBox .tools button{flex:1;padding:7px;border-radius:9px;border:1px solid #26505f;font-size:11.5px;color:var(--muted)}
 
 /* ---------- physical cards ---------- */
 
-#hand{display:flex;gap:7px;padding:9px 10px 2px;justify-content:center;overflow-x:auto;scrollbar-width:none;align-items:flex-end;min-height:92px}
+#hand{display:flex;gap:7px;padding:7px 10px 2px;justify-content:center;overflow-x:auto;scrollbar-width:none;align-items:flex-end;min-height:86px;flex:0 0 auto}
 #hand::-webkit-scrollbar{display:none}
 .stack{position:relative;flex:0 0 auto;width:54px;height:78px}
 
@@ -233,7 +247,12 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 <div id="app">
   <div id="top"></div>
   <div id="boardwrap"><svg id="board" xmlns="http://www.w3.org/2000/svg"></svg>
-    <div id="fx"></div><div id="dicebox"></div></div>
+    <div id="fx"></div><div id="dicebox"></div>
+    <div id="zoomctl">
+      <button id="zoomIn" aria-label="Zoom in">+</button>
+      <button id="zoomOut" aria-label="Zoom out">−</button>
+      <button id="zoomReset" aria-label="Reset view">⤢</button>
+    </div></div>
   <div id="status"></div>
   <div id="log"></div>
   <div id="mystatus"></div>
@@ -246,9 +265,10 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
   <div id="start">
     <div>
       <h1 class="brand">Hex<span>haven</span></h1>
-      <div style="font-size:11px;letter-spacing:.08em;color:#6d8894;margin:-10px 0 10px">v1.8 — installable PWA, launches full-screen with no browser bars</div>
+      <div style="font-size:11px;letter-spacing:.08em;color:#6d8894;margin:-10px 0 10px">v2.0 — safe-area fix, pinch zoom, bigger touch targets, game reports &amp; records</div>
       <p class="tagline">Settle the island, trade what you have for what you need, and be first to ten points. Play three bots on your own, or pass one device around the table.</p>
       <div id="installRow" style="display:none"></div>
+      <div id="fsRow" style="display:none"></div>
     </div>
     <div>
       <div class="count" id="mapsel"></div>
@@ -263,6 +283,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
       <b>Costs.</b> Road: lumber + brick. Settlement: lumber + brick + grain + wool. City: 3 ore + 2 grain. Development card: ore + grain + wool.<br><br>
       <span id="ruleswin"></span>
     </div>
+    <div id="statsBox"></div>
   </div>
 
   <div id="over"></div>
@@ -659,7 +680,7 @@ function house(v,color,city){
 }
 
 function renderBoard(){
-  const pad=64;
+  const pad=46;
   const xs=verts.map(v=>v.x), ys=verts.map(v=>v.y);
   const minX=Math.min(...xs)-pad, maxX=Math.max(...xs)+pad;
   const minY=Math.min(...ys)-pad, maxY=Math.max(...ys)+pad;
@@ -695,25 +716,103 @@ function renderBoard(){
     hexes.forEach(h=>{ if(!h.robber) s+=`<path class="hexpick" data-hex="${h.id}" d="${hexPath(h.x,h.y,HEXR-4)}"/>`; });
   } else if(a==='settlement'||a==='city'){
     const list = a==='city' ? citySpots(S.turn) : settlementSpots(S.turn,S.phase==='setup');
-    list.forEach(vi=>{ s+=`<circle class="spot" data-v="${vi}" cx="${verts[vi].x}" cy="${verts[vi].y}" r="11"/>`; });
+    list.forEach(vi=>{
+      s+=`<circle class="spot" cx="${verts[vi].x}" cy="${verts[vi].y}" r="14"/>`;
+      s+=`<circle class="hit" data-v="${vi}" cx="${verts[vi].x}" cy="${verts[vi].y}" r="30"/>`;
+    });
   } else if(a==='road'){
     roadSpots(S.turn,S.setupRoadFrom).forEach(ei=>{
       const e=edges[ei],p=verts[e.v[0]],q=verts[e.v[1]];
-      s+=`<line class="spotline" data-e="${ei}" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/>`;
+      s+=`<line class="spotline" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/>`;
+      s+=`<line class="hit" data-e="${ei}" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke-width="34" stroke-linecap="round"/>`;
     });
   }
   const b=el('board');
   b.setAttribute('viewBox',[minX,minY,maxX-minX,maxY-minY].join(' '));
-  b.innerHTML=s;
+  const cx=(minX+maxX)/2, cy=(minY+maxY)/2;
+  b.innerHTML=`<g transform="translate(${VIEW.x.toFixed(1)} ${VIEW.y.toFixed(1)}) translate(${cx} ${cy}) scale(${VIEW.z}) translate(${-cx} ${-cy})">${s}</g>`;
+  VIEW.bounds={minX,maxX,minY,maxY};
+  const zi=el('zoomIn'), zo=el('zoomOut');
+  if(zi) zi.disabled = VIEW.z>=VIEW.max;
+  if(zo) zo.disabled = VIEW.z<=VIEW.min;
 }
 
-el('board').addEventListener('click',ev=>{
+/* ---------- board view: pan, pinch-zoom, tap ---------- */
+const VIEW={x:0,y:0,z:1,min:1,max:3,bounds:null};
+function clampPan(){
+  if(!VIEW.bounds) return;
+  const w=VIEW.bounds.maxX-VIEW.bounds.minX, h=VIEW.bounds.maxY-VIEW.bounds.minY;
+  const mx=Math.max(0,(w*VIEW.z-w)/2), my=Math.max(0,(h*VIEW.z-h)/2);
+  VIEW.x=Math.max(-mx,Math.min(mx,VIEW.x));
+  VIEW.y=Math.max(-my,Math.min(my,VIEW.y));
+}
+function setZoom(z,redraw){
+  VIEW.z=Math.max(VIEW.min,Math.min(VIEW.max,z));
+  if(VIEW.z===VIEW.min){VIEW.x=0;VIEW.y=0;}
+  clampPan();
+  if(redraw!==false) renderBoard();
+}
+function boardTap(t){
   if(!S||S.phase==='over'||S.phase==='rolloff'||S.rolling||P().bot) return;
-  const t=ev.target;
   if(t.dataset.v!==undefined) placeBuilding(+t.dataset.v);
   else if(t.dataset.e!==undefined) placeRoad(+t.dataset.e);
   else if(t.dataset.hex!==undefined) moveRobber(+t.dataset.hex);
-});
+}
+(function(){
+  const b=el('board');
+  const pts=new Map();
+  let moved=0, startX=0, startY=0, panX=0, panY=0, pinchD=0, pinchZ=1;
+  const dist=()=>{
+    const a=[...pts.values()];
+    return Math.hypot(a[0].x-a[1].x, a[0].y-a[1].y);
+  };
+  // map screen px delta -> svg user units, so panning tracks the finger exactly
+  const unitsPerPx=()=>{
+    if(!VIEW.bounds) return 1;
+    const r=b.getBoundingClientRect();
+    const w=VIEW.bounds.maxX-VIEW.bounds.minX, h=VIEW.bounds.maxY-VIEW.bounds.minY;
+    return Math.max(w/r.width, h/r.height);
+  };
+  b.addEventListener('pointerdown',e=>{
+    pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pts.size===1){ moved=0; startX=e.clientX; startY=e.clientY; panX=VIEW.x; panY=VIEW.y; }
+    if(pts.size===2){ pinchD=dist(); pinchZ=VIEW.z; }
+    try{ b.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  b.addEventListener('pointermove',e=>{
+    if(!pts.has(e.pointerId)) return;
+    pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pts.size===2){
+      const d=dist();
+      if(pinchD>0){ setZoom(pinchZ*(d/pinchD)); }
+      moved=999;
+      return;
+    }
+    const dx=e.clientX-startX, dy=e.clientY-startY;
+    moved=Math.max(moved,Math.hypot(dx,dy));
+    if(VIEW.z>1.02 && moved>8){
+      const u=unitsPerPx();
+      VIEW.x=panX+dx*u; VIEW.y=panY+dy*u;
+      clampPan(); renderBoard();
+    }
+  });
+  function end(e){
+    if(!pts.has(e.pointerId)) return;
+    const wasSingle=pts.size===1;
+    pts.delete(e.pointerId);
+    if(wasSingle && moved<10){
+      const t=document.elementFromPoint(e.clientX,e.clientY);
+      if(t) boardTap(t);
+    }
+    if(pts.size<2) pinchD=0;
+  }
+  b.addEventListener('pointerup',end);
+  b.addEventListener('pointercancel',e=>{pts.delete(e.pointerId); if(pts.size<2) pinchD=0;});
+  b.addEventListener('wheel',e=>{ e.preventDefault(); setZoom(VIEW.z*(e.deltaY<0?1.12:0.89)); },{passive:false});
+  el('zoomIn').onclick=()=>setZoom(VIEW.z*1.25);
+  el('zoomOut').onclick=()=>setZoom(VIEW.z/1.25);
+  el('zoomReset').onclick=()=>{ VIEW.x=0; VIEW.y=0; setZoom(1); };
+})();
 
 /* ============================ panels ============================ */
 function renderTop(){
@@ -1323,15 +1422,161 @@ function stealSheet(victims){
     delete el('sheet').dataset.locked;steal(+b.dataset.s);}); });
 }
 
+function scoreBreakdown(pi){
+  const p=S.players[pi];
+  let setts=0, cities=0;
+  verts.forEach(v=>{ if(v.b&&v.b.p===pi){ if(v.b.t==='city') cities++; else setts++; } });
+  const rows=[];
+  if(setts)  rows.push({label:setts+' settlement'+(setts>1?'s':'')+' x 1', pts:setts});
+  if(cities) rows.push({label:cities+(cities>1?' cities':' city')+' x 2', pts:cities*2});
+  if(S.longest.p===pi) rows.push({label:'Longest road ('+S.longest.len+' segments)', pts:2});
+  if(S.army.p===pi)    rows.push({label:'Largest army ('+p.knights+' knights)', pts:2});
+  if(p.vpCards)        rows.push({label:p.vpCards+' hidden point card'+(p.vpCards>1?'s':''), pts:p.vpCards});
+  return {rows, total: vpOf(pi,true), setts, cities, knights:p.knights,
+          longest:S.longest.p===pi, army:S.army.p===pi, vpCards:p.vpCards};
+}
+
+/* ---------- persistent win/loss records ---------- */
+const REC_KEY='hexhaven-records-v1';
+function loadRecords(){
+  try{ return JSON.parse(localStorage.getItem(REC_KEY)||'{"games":[],"tally":{}}'); }
+  catch(e){ return {games:[],tally:{}}; }
+}
+function saveRecords(data){
+  try{ localStorage.setItem(REC_KEY, JSON.stringify(data)); return true; }
+  catch(e){ return false; }
+}
+function recordGame(){
+  const data=loadRecords();
+  const entry={
+    date:new Date().toISOString(),
+    map:S.map, winPoints:S.mapCfg.winPoints,
+    winner:S.players[S.winner].name,
+    players:S.players.map(p=>{
+      const b=scoreBreakdown(p.id);
+      return {name:p.name, bot:p.bot, points:b.total, settlements:b.setts, cities:b.cities,
+              knights:b.knights, longestRoad:b.longest, largestArmy:b.army, pointCards:b.vpCards};
+    })
+  };
+  data.games.push(entry);
+  if(data.games.length>200) data.games=data.games.slice(-200);
+  S.players.forEach(p=>{
+    const t=data.tally[p.name]||{wins:0,losses:0,bot:p.bot};
+    if(p.id===S.winner) t.wins++; else t.losses++;
+    t.bot=p.bot;
+    data.tally[p.name]=t;
+  });
+  S.recordSaved=saveRecords(data);
+  return entry;
+}
+
+/* ---------- results card image ---------- */
+function buildResultsCanvas(){
+  const dpr=2, W=760, pad=34;
+  const lineH=25, headH=150;
+  let bodyH=0;
+  const cards=S.players.map(p=>scoreBreakdown(p.id));
+  cards.forEach(c=>{ bodyH += 46 + c.rows.length*lineH + 16; });
+  const H=headH+bodyH+54;
+  const cv=document.createElement('canvas');
+  cv.width=W*dpr; cv.height=H*dpr;
+  const g=cv.getContext('2d');
+  g.scale(dpr,dpr);
+  g.fillStyle='#0b1d28'; g.fillRect(0,0,W,H);
+  g.fillStyle='#e0b25a';
+  g.font='700 32px Georgia, serif';
+  g.fillText(S.players[S.winner].name+' wins', pad, 54);
+  g.fillStyle='#8aa5b0'; g.font='14px system-ui, sans-serif';
+  const d=new Date();
+  g.fillText(MAPS[S.map].label+' map  ·  first to '+S.mapCfg.winPoints+'  ·  '+d.toLocaleString(), pad, 80);
+  g.strokeStyle='#27505f'; g.beginPath(); g.moveTo(pad,104); g.lineTo(W-pad,104); g.stroke();
+
+  let y=headH;
+  const order=S.players.map((p,i)=>i).sort((a,b)=>cards[b].total-cards[a].total);
+  order.forEach(pi=>{
+    const p=S.players[pi], c=cards[pi];
+    g.fillStyle=p.color; g.fillRect(pad,y-16,12,12);
+    g.fillStyle='#e8e2d2'; g.font='700 19px system-ui, sans-serif';
+    g.fillText(p.name+(p.bot?' (bot)':'')+(pi===S.winner?'  ★':''), pad+22, y-4);
+    g.fillStyle='#e0b25a'; g.font='700 21px Georgia, serif';
+    g.fillText(c.total+' pts', W-pad-72, y-4);
+    y+=26;
+    g.font='14px system-ui, sans-serif';
+    c.rows.forEach(r=>{
+      g.fillStyle='#8aa5b0'; g.fillText(r.label, pad+22, y);
+      g.fillStyle='#cfd8dd'; g.fillText('+'+r.pts, W-pad-56, y);
+      y+=lineH;
+    });
+    if(!c.rows.length){ g.fillStyle='#8aa5b0'; g.fillText('no points scored', pad+22, y); y+=lineH; }
+    y+=22;
+  });
+  g.fillStyle='#5c7885'; g.font='12px system-ui, sans-serif';
+  g.fillText('Hexhaven', pad, H-18);
+  return cv;
+}
+function resultsText(){
+  const lines=[];
+  lines.push('HEXHAVEN — '+S.players[S.winner].name+' wins');
+  lines.push(MAPS[S.map].label+' map · first to '+S.mapCfg.winPoints+' · '+new Date().toLocaleString());
+  lines.push('');
+  S.players.map((p,i)=>i).sort((a,b)=>vpOf(b,true)-vpOf(a,true)).forEach(pi=>{
+    const p=S.players[pi], c=scoreBreakdown(pi);
+    lines.push((pi===S.winner?'* ':'  ')+p.name+(p.bot?' (bot)':'')+' — '+c.total+' points');
+    c.rows.forEach(r=>lines.push('     '+r.label+'  +'+r.pts));
+  });
+  return lines.join('\n');
+}
+async function saveResultsImage(){
+  const cv=buildResultsCanvas();
+  const blob=await new Promise(r=>cv.toBlob(r,'image/png'));
+  if(!blob) return;
+  const stamp=new Date().toISOString().slice(0,16).replace(/[:T]/g,'-');
+  const file=new File([blob],'hexhaven-'+stamp+'.png',{type:'image/png'});
+  if(navigator.canShare && navigator.canShare({files:[file]})){
+    try{ await navigator.share({files:[file],title:'Hexhaven result'}); return; }catch(e){ if(e.name==='AbortError') return; }
+  }
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=file.name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),4000);
+}
+function downloadHistory(){
+  const data=loadRecords();
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='hexhaven-history.json'; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),4000);
+}
+
 function showOver(){
   const w=S.players[S.winner];
+  const entry=recordGame();
+  const order=S.players.map((p,i)=>i).sort((a,b)=>vpOf(b,true)-vpOf(a,true));
   el('over').style.display='flex';
   el('over').innerHTML=`<div><h1 class="brand">${w.name} <span>wins</span></h1>
-    <p class="tagline">${S.mapCfg.winPoints} points on the island of Hexhaven.</p></div>
-    ${S.players.map(p=>`<div class="row"><span class="dot" style="background:${p.color}"></span>
-      <div class="grow"><div class="t">${p.name}</div>
-      <div class="c">${vpOf(p.id,true)} points · ${p.knights} knights${S.longest.p===p.id?' · longest road':''}${S.army.p===p.id?' · largest army':''}</div></div></div>`).join('')}
-    <button class="wide" onclick="location.reload()">Play again</button>`;
+    <p class="tagline">${MAPS[S.map].label} map · first to ${S.mapCfg.winPoints} points</p></div>
+    ${order.map(pi=>{
+      const p=S.players[pi], c=scoreBreakdown(pi);
+      return `<div class="row" style="align-items:flex-start">
+        <span class="dot" style="background:${p.color};margin-top:4px"></span>
+        <div class="grow">
+          <div class="t">${p.name}${p.bot?' <span style="color:var(--muted);font-weight:400">(bot)</span>':''}${pi===S.winner?' ★':''}
+            <span style="float:right;color:var(--brass);font-family:ui-serif,Georgia,serif">${c.total} pts</span></div>
+          ${c.rows.length?c.rows.map(r=>`<div class="c">${r.label} <span style="float:right">+${r.pts}</span></div>`).join(''):'<div class="c">no points scored</div>'}
+        </div></div>`;
+    }).join('')}
+    <div class="two">
+      <button class="wide ghost" id="saveImg">Save result image</button>
+      <button class="wide ghost" id="copyTxt">Copy summary</button>
+    </div>
+    <button class="wide" onclick="location.reload()">Play again</button>
+    <p class="tagline" id="saveNote" style="margin:0;font-size:12px">${S.recordSaved?'Result added to your win/loss history.':'Could not write to this browser\'s storage, so history was not updated.'}</p>`;
+  el('saveImg').onclick=()=>saveResultsImage();
+  el('copyTxt').onclick=async ()=>{
+    try{ await navigator.clipboard.writeText(resultsText()); el('saveNote').textContent='Summary copied to clipboard.'; }
+    catch(e){ el('saveNote').textContent='Clipboard blocked — use Save result image instead.'; }
+  };
   renderTop();
 }
 
@@ -1662,6 +1907,35 @@ window.addEventListener('beforeinstallprompt', e=>{
 window.addEventListener('appinstalled', ()=>{ deferredInstallPrompt=null; renderInstallRow(); });
 renderInstallRow();
 
+function fsMethod(){
+  const el=document.documentElement;
+  return el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;
+}
+function inFullscreen(){
+  return !!(document.fullscreenElement||document.webkitFullscreenElement||document.mozFullScreenElement||document.msFullscreenElement);
+}
+function exitFullscreen(){
+  const fn=document.exitFullscreen||document.webkitExitFullscreen||document.mozCancelFullScreen||document.msExitFullscreen;
+  if(fn) fn.call(document);
+}
+function renderFsRow(){
+  const row=document.getElementById('fsRow');
+  if(!row) return;
+  const method=fsMethod();
+  if(!method || isStandalone()){ row.style.display='none'; row.innerHTML=''; return; }
+  row.style.display='block';
+  row.innerHTML = inFullscreen()
+    ? `<button class="install-btn" id="fsBtn">⤡ Exit full screen</button>`
+    : `<button class="install-btn" id="fsBtn">⛶ Play full screen — no address bar</button>`;
+  document.getElementById('fsBtn').onclick=()=>{
+    if(inFullscreen()) exitFullscreen();
+    else { try{ method.call(document.documentElement); }catch(e){} }
+  };
+}
+['fullscreenchange','webkitfullscreenchange','mozfullscreenchange','MSFullscreenChange']
+  .forEach(evt=>document.addEventListener(evt, renderFsRow));
+renderFsRow();
+
 // Offline app-shell caching via a companion sw.js file, if one is hosted alongside
 // this page. Service workers cannot be registered from a blob/data URL (browsers
 // require an inspectable same-origin file for something this powerful), so this
@@ -1698,7 +1972,29 @@ function renderStart(){
         <input id="nm${i}" placeholder="Player ${i+1}" value="${keep(i)}" maxlength="12"></div>`).join('');
   }
 }
+function renderStats(){
+  const box=el('statsBox'); if(!box) return;
+  const data=loadRecords();
+  const names=Object.keys(data.tally);
+  if(!names.length){ box.innerHTML=''; return; }
+  names.sort((a,b)=>(data.tally[b].wins-data.tally[a].wins)||a.localeCompare(b));
+  box.innerHTML=`<h4>Record — ${data.games.length} game${data.games.length>1?'s':''} played</h4>`
+    + names.map(n=>{
+        const t=data.tally[n], tot=t.wins+t.losses;
+        const pct=tot?Math.round(t.wins/tot*100):0;
+        return `<div class="rec"><span><b>${n}</b>${t.bot?' <span style="opacity:.6">(bot)</span>':''}</span>
+          <span>${t.wins}W – ${t.losses}L · ${pct}%</span></div>`;
+      }).join('')
+    + `<div class="tools"><button id="dlHist">Export history (JSON)</button><button id="clrHist">Clear</button></div>`;
+  el('dlHist').onclick=downloadHistory;
+  el('clrHist').onclick=()=>{
+    if(!confirm('Clear all saved win/loss history?')) return;
+    try{ localStorage.removeItem(REC_KEY); }catch(e){}
+    renderStats();
+  };
+}
 renderStart();
+renderStats();
 el('startbtn').onclick=()=>{
   let defs;
   if(mode==='solo'){
