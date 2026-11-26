@@ -4,7 +4,7 @@
 // nothing else to configure. Bump CACHE below if you replace hexhaven.html later,
 // so returning players pick up the new version instead of a stale cached copy.
 
-const CACHE = 'hexhaven-shell-v3';
+const CACHE = 'hexhaven-shell-v4';
 
 self.addEventListener('install', (e) => {
   self.skipWaiting();
